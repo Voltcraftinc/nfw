@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFW: Non-Fungible Wrestling</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Animate.css for animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <!-- AOS library for scroll animations -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0077FF;
+            --secondary: #FFD700;
+            --accent: #9933FF;
+            --dark: #121212;
+            --light: #EEEEEE;
+            --neon-green: #00FF99;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 35%, rgba(0, 119, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 65%, rgba(153, 51, 255, 0.15) 0%, transparent 50%);
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Barlow Condensed', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            background-color: rgba(18, 18, 18, 0.8);
+        }
+
+        nav.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--secondary);
+            text-decoration: none;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span.accent {
+            color: var(--primary);
+        }
+
+        .logo::after {
+            content: 'BETA';
+            position: absolute;
+            top: -5px;
+            right: -30px;
+            font-size: 0.5rem;
+            background-color: var(--accent);
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .wallet-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .wallet-btn:hover {
+            background-color: #005bb8;
+            transform: translateY(-2px);
+        }
+
+        .wallet-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .hero-content {
+            width: 50%;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            color: white;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-title .highlight {
+            color: var(--secondary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-title .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background-color: var(--primary);
+            z-index: -1;
+            transform: skewX(-15deg);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #cccccc;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .cta-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-btn.primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .cta-btn.secondary {
+            background-color: transparent;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-btn.primary:hover {
+            background-color: #005bb8;
+        }
+
+        .cta-btn.secondary:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+
+        .hero-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 55%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            max-height: 90%;
+            object-fit: contain;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Featured Wrestlers Section */
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .wrestlers-container {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--dark);
+        }
+
+        .wrestlers-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .wrestlers-container::-webkit-scrollbar-track {
+            background: var(--dark);
+            border-radius: 10px;
+        }
+
+        .wrestlers-container::-webkit-scrollbar-thumb {
+            background-color: var(--primary);
+            border-radius: 10px;
+        }
+
+        .wrestler-card {
+            min-width: 250px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .wrestler-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .wrestler-card:hover .wrestler-overlay {
+            opacity: 1;
+        }
+
+        .wrestler-image {
+            height: 350px;
+            width: 100%;
+            object-fit: cover;
+            object-position: top;
+        }
+
+        .wrestler-info {
+            padding: 1rem;
+        }
+
+        .wrestler-name {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+            color: var(--secondary);
+        }
+
+        .wrestler-nickname {
+            font-size: 0.9rem;
+            color: #999;
+            margin-bottom: 0.5rem;
+        }
+
+        .wrestler-stats {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #333;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .wrestler-stat {
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .wrestler-stat span {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .wrestler-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 50%);
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .wrestler-overlay-content {
+            color: white;
+        }
+
+        .wrestler-overlay-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .wrestler-overlay-bio {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .wrestler-overlay-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .wrestler-overlay-button:hover {
+            background-color: #005bb8;
+        }
+
+        /* Championships Section */
+        .championships-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .championship-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .championship-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .championship-image {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            background-color: #000;
+            padding: 1rem;
+        }
+
+        .championship-info {
+            padding: 1.5rem;
+        }
+
+        .championship-name {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .championship-description {
+            color: #ccc;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .championship-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .championship-feature {
+            background-color: rgba(0, 119, 255, 0.2);
+            color: var(--primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        /* Roadmap Section */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem 0;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--primary);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 50%;
+            padding: 1rem;
+            box-sizing: border-box;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 2rem;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            top: 25px;
+            z-index: 1;
+        }
+
+        .timeline-item:nth-child(odd)::after {
+            right: -10px;
+        }
+
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+        }
+
+        .timeline-content {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline-date {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .timeline-description {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* How It Works Section */
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .step-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .step-number {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .step-description {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .step-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        /* Token Section */
+        .token-section {
+            background: linear-gradient(135deg, rgba(0, 119, 255, 0.1) 0%, rgba(153, 51, 255, 0.1) 100%);
+            padding: 5rem 0;
+            border-radius: 10px;
+        }
+
+        .token-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .token-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .token-info p {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        .token-features {
+            margin: 2rem 0;
+        }
+
+        .token-feature {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .token-feature-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-right: 1rem;
+            min-width: 30px;
+        }
+
+        .token-feature-content h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+        }
+
+        .token-feature-content p {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .token-chart {
+            position: relative;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .token-chart img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Newsletter Section */
+        .newsletter {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            padding: 3rem;
+            border-radius: 10px;
+            text-align: center;
+            margin: 5rem 0;
+        }
+
+        .newsletter h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .newsletter p {
+            font-size: 1rem;
+            color: #ccc;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .newsletter-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            font-size: 1rem;
+            background-color: #333;
+            color: white;
+        }
+
+        .newsletter-input::placeholder {
+            color: #999;
+        }
+
+        .newsletter-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .newsletter-button:hover {
+            background-color: #005bb8;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0a0a0a;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-col h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .footer-social a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background-color: #222;
+            border-radius: 50%;
+            color: #ccc;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .footer-social a:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #222;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-content {
+                width: 60%;
+            }
+            
+            .hero-image {
+                width: 45%;
+            }
+            
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            
+            .token-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                justify-content: center;
+                padding-top: 70px;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .hero-content {
+                width: 100%;
+                text-align: center;
+                padding: 2rem 0;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-image {
+                position: relative;
+                width: 100%;
+                height: 400px;
+                margin-top: 2rem;
+            }
+            
+            .cta-buttons {
+                justify-content: center;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(odd),
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item:nth-child(odd)::after,
+            .timeline-item:nth-child(even)::after {
+                left: 21px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .newsletter {
+                padding: 2rem 1rem;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+            
+            .newsletter-input {
+                border-radius: 4px;
+                margin-bottom: 1rem;
+            }
+            
+            .newsletter-button {
+                border-radius: 4px;
+                padding: 0.75rem;
+            }
+        }
+
+        /* Glowing effect for certain elements */
+        .glow-effect {
+            box-shadow: 0 0 10px var(--primary), 0 0 20px rgba(0, 119, 255, 0.2);
+        }
+
+        /* Custom animations */
+        @keyframes glitch {
+            0% {
+                transform: translate(0);
+            }
+            20% {
+                transform: translate(-5px, 5px);
+            }
+            40% {
+                transform: translate(-5px, -5px);
+            }
+            60% {
+                transform: translate(5px, 5px);
+            }
+            80% {
+                transform: translate(5px, -5px);
+            }
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        .glitch-animation {
+            animation: glitch 0.3s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .glitch-animation:hover {
+            animation-play-state: running;
+        }
+        
+        /* Particles background */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* Circuit board pattern */
+        .circuit-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=');
+            opacity: 0.3;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">NFW<span class="accent">RESTLING</span></a>
+            <div class="nav-links">
+                <a href="#wrestlers">Wrestlers</a>
+                <a href="#championships">Championships</a>
+                <a href="#roadmap">Roadmap</a>
+                <a href="#token">$PINCRED</a>
+            </div>
+            <button class="wallet-btn">
+                <i class="fas fa-wallet"></i> Connect Wallet
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="circuit-pattern"></div>
+        <div id="particles-js"></div>
+        <div class="container hero-content">
+            <h1 class="hero-title animate__animated animate__fadeInUp">Non-Fungible <span class="highlight">Wrestling</span></h1>
+            <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">Where blockchain meets the squared circle. Mint. Match. Mayhem.</p>
+            <div class="cta-buttons animate__animated animate__fadeInUp animate__delay-2s">
+                <a href="#" class="cta-btn primary">Explore Wrestlers</a>
+                <a href="#" class="cta-btn secondary">Learn More</a>
+            </div>
+        </div>
+        <div class="hero-image animate__animated animate__fadeIn animate__delay-1s">
+            <!-- PLACEHOLDER: Hero image - This should be a wrestler silhouette or collage -->
+            <!-- Size recommendation: 800x1000px with transparent background -->
+            <img src="/api/placeholder/800/1000" alt="NFW Featured Wrestlers" />
+        </div>
+    </section>
+
+    <!-- Featured Wrestlers Section -->
+    <section id="wrestlers" class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Featured Wrestlers</h2>
+            <div class="wrestlers-container">
+                <!-- WRESTLER 1 -->
+                <div class="wrestler-card" data-aos="fade-up" data-aos-delay="100">
+                    <!-- PLACEHOLDER: Wrestler image - "Blockchain" Bronson Steele -->
+                    <!-- Size recommendation: 400x600px portrait shot -->
+                    <img src="/api/placeholder/400/600" alt="Blockchain Bronson Steele" class="wrestler-image" />
+                    <div class="wrestler-info">
+                        <h3 class="wrestler-name">Blockchain Bronson Steele</h3>
+                        <p class="wrestler-nickname">The Crypto Crusher</p>
+                        <div class="wrestler-stats">
+                            <div class="wrestler-stat">
+                                <span>85</span>
+                                Power
+                            </div>
+                            <div class="wrestler-stat">
+                                <span>75</span>
+                                Tech
+                            </div>
+                            <div class="wrestler-stat">
+                                <span>90</span>
+                                Charisma
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrestler-overlay">
+                        <div class="wrestler-overlay-content">
+                            <h3 class="wrestler-overlay-name">Blockchain Bronson Steele</h3>
+                            <p class="wrestler-overlay-bio">Former Wall Street wolf turned blockchain evangelist. Claims he's "mining victories" and will bring NFW to the moon.</p>
+                            <button class="wrestler-overlay-button">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- WRESTLER 2 -->
+                <div class="wrestler-card" data-aos="fade-up" data-aos-delay="200">
+                    <!-- PLACEHOLDER: Wrestler image - Damien "Zero Hour" Blackwood -->
+                    <!-- Size recommendation: 400x600px portrait shot -->
+                    <img src="/api/placeholder/400/600" alt="Damien Zero Hour Blackwood" class="wrestler-image" />
+                    <div class="wrestler-info">
+                        <h3 class="wrestler-name">Damien "Zero Hour" Blackwood</h3>
+                        <p class="wrestler-nickname">The Code Demon</p>
+                        <div class="wrestler-stats">
+                            <div class="wrestler-stat">
+                                <span>75</span>
+                                Power
+                            </div>
+                            <div class="wrestler-stat">
+                                <span>80</span>
+                                Tech
+                            </div>
+                            <div class="wrestler-stat">
+                                <span>95</span>
+                                Hardcore
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrestler-overlay">
+                        <div class="wrestler-overlay-content">
+                            <h3 class="wrestler-overlay-name">Damien "Zero Hour" Blackwood</h3>
+                            <p class="wrestler-overlay-bio">Obsessed with Y2K aesthetics and digital apocalypse. Carries a briefcase full of broken keyboards.</p>
+                            <button class="wrestler-overlay-button">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- WRESTLER 3 -->
+                <div class="wrestler-card" data-aos="fade-up" data-aos-delay="300">
+                    <!-- PLACEHOLDER: Wrestler image - "Wildcard" Willie Nash -->
+                    <!-- Size recommendation: 400x600px portrait shot -->
+                    <img src="/api/placeholder/400/600" alt="Wildcard Willie Nash" class="wrestler-image" />
+                    <div class="wrestler-info">
+                        <h3 class="wrestler-name">"Wildcard" Willie Nash</h3>
+                        <p class="wrestler-nickname">The Random Number Generator</p>
+                        <div class="wrestler-stats">
+                            <div class="wrestler-stat">
+                                <span>70</span>
+                                Power
+                            </div>
+                            <div class="wrestler-stat">
+                                <span>70</span>
+                                Tech
+                            </div>
+                            <div class="wrestler-stat">
+                                <span>95</span>
+                                Unpredictable
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrestler-overlay">
+                        <div class="wrestler-overlay-content">
+                            <h3 class="wrestler-overlay-name">"Wildcard" Willie Nash</h3>
+                            <p class="wrestler-overlay-bio">Changes his entire moveset weekly. Chaos incarnate. Nobody knows what version will show up.</p>
+                            <button class="wrestler-overlay-button">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- WRESTLER 4 -->
+                <div class="wrestler-card" data-aos="fade-up" data-aos-delay="400">
+                    <!-- PLACEHOLDER: Wrestler image - Victoria "The Validator" Crown -->
+                    <!-- Size recommendation: 400x600px portrait shot -->
+                    <img src="/api/placeholder/400/600" alt="Victoria The Validator Crown" class="wrestler-image" />
+                    <div class="wrestler-info">
+                        <h3 class="wrestler-name">Victoria "The Validator" Crown</h3>
+                        <p class="wrestler-nickname">The Consensus Queen</p>
+                        <div class="wrestler-stats">
+                            <div class="wrestler-stat">
+                                <span>90</span>
+                                Power
+                            </div>
+                            <div class="wrestler-stat">
+                                <span>85</span>
+                                Tech
+                            </div>
+                            <div class="wrestler-stat">
+                                <span>80</span>
+                                Leadership
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrestler-overlay">
+                        <div class="wrestler-overlay-content">
+                            <h3 class="wrestler-overlay-name">Victoria "The Validator" Crown</h3>
+                            <p class="wrestler-overlay-bio">Former Olympic powerlifter who demands unanimous respect. The undisputed queen of the ring.</p>
+                            <button class="wrestler-overlay-button">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- WRESTLER 5 -->
+                <div class="wrestler-card" data-aos="fade-up" data-aos-delay="500">
+                    <!-- PLACEHOLDER: Wrestler image - Zephyr "The Paradox" Grey -->
+                    <!-- Size recommendation: 400x600px portrait shot -->
+                    <img src="/api/placeholder/400/600" alt="Zephyr The Paradox Grey" class="wrestler-image" />
+                    <div class="wrestler-info">
+                        <h3 class="wrestler-name">Zephyr "The Paradox" Grey</h3>
+                        <p class="wrestler-nickname">The Gender Fluid Fighter</p>
+                        <div class="wrestler-stats">
+                            <div class="wrestler-stat">
+                                <span>80</span>
+                                Power
+                            </div>
+                            <div class="wrestler-stat">
+                                <span>85</span>
+                                Agility
+                            </div>
+                            <div class="wrestler-stat">
+                                <span>95</span>
+                                Adaptation
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrestler-overlay">
+                        <div class="wrestler-overlay-content">
+                            <h3 class="wrestler-overlay-name">Zephyr "The Paradox" Grey</h3>
+                            <p class="wrestler-overlay-bio">Exists between definitions. Fighting style shifts like their identity. A truly unique presence in NFW.</p>
+                            <button class="wrestler-overlay-button">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center" style="margin-top: 2rem; text-align: center;">
+                <a href="#" class="cta-btn primary">View All Wrestlers</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Championships Section -->
+    <section id="championships" class="section" style="background-color: rgba(0,0,0,0.3);">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Championship Belts</h2>
+            <div class="championships-grid">
+                <!-- Championship 1 -->
+                <div class="championship-card" data-aos="fade-up">
+                    <!-- PLACEHOLDER: Championship image - Digital World Championship -->
+                    <!-- Size recommendation: 600x400px of the belt on dark background -->
+                    <img src="/api/placeholder/600/400" alt="NFW Digital World Championship" class="championship-image" />
+                    <div class="championship-info">
+                        <h3 class="championship-name">Digital World Championship</h3>
+                        <p class="championship-description">The crown jewel of NFW. This prestigious title represents the pinnacle of achievement in the metaverse.</p>
+                        <div class="championship-features">
+                            <span class="championship-feature">Smart Contract Embedded</span>
+                            <span class="championship-feature">Live Stats Display</span>
+                            <span class="championship-feature">Dynamic Design</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Championship 2 -->
+                <div class="championship-card" data-aos="fade-up" data-aos-delay="100">
+                    <!-- PLACEHOLDER: Championship image - Binary Tag Team Championships -->
+                    <!-- Size recommendation: 600x400px of the belts on dark background -->
+                    <img src="/api/placeholder/600/400" alt="NFW Binary Tag Team Championships" class="championship-image" />
+                    <div class="championship-info">
+                        <h3 class="championship-name">Binary Tag Team Championships</h3>
+                        <p class="championship-description">Two interconnected belts that symbolize perfect teamwork and synchronization in the digital arena.</p>
+                        <div class="championship-features">
+                            <span class="championship-feature">Synchronized Belts</span>
+                            <span class="championship-feature">Shared Metadata</span>
+                            <span class="championship-feature">Team Bonuses</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Championship 3 -->
+                <div class="championship-card" data-aos="fade-up" data-aos-delay="200">
+                    <!-- PLACEHOLDER: Championship image - Token Championship -->
+                    <!-- Size recommendation: 600x400px of the belt on dark background -->
+                    <img src="/api/placeholder/600/400" alt="NFW Token Championship" class="championship-image" />
+                    <div class="championship-info">
+                        <h3 class="championship-name">$PINCRED Token Championship</h3>
+                        <p class="championship-description">A high-risk, high-reward title that generates actual $PINCRED tokens for its holder.</p>
+                        <div class="championship-features">
+                            <span class="championship-feature">Token Generation</span>
+                            <span class="championship-feature">Fluctuating Value</span>
+                            <span class="championship-feature">Special Stakes</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Championship 4 -->
+                <div class="championship-card" data-aos="fade-up" data-aos-delay="300">
+                    <!-- PLACEHOLDER: Championship image - Glitch Championship -->
+                    <!-- Size recommendation: 600x400px of the belt on dark background -->
+                    <img src="/api/placeholder/600/400" alt="NFW Glitch Championship" class="championship-image" />
+                    <div class="championship-info">
+                        <h3 class="championship-name">Glitch Championship</h3>
+                        <p class="championship-description">The chaotic 24/7 title with constantly changing rules and unexpected title changes.</p>
+                        <div class="championship-features">
+                            <span class="championship-feature">24/7 Rules</span>
+                            <span class="championship-feature">Random Modifiers</span>
+                            <span class="championship-feature">Unpredictable</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">How It Works</h2>
+            <div class="steps-container">
+                <!-- Step 1 -->
+                <div class="step-card" data-aos="fade-up">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Mint Your Wrestler</h3>
+                    <p class="step-description">Purchase a unique 1-of-1 NFW wrestler with their own identity, moveset, and backstory. Each wrestler is completely original.</p>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="step-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Compete & Earn</h3>
+                    <p class="step-description">Enter your wrestler into matches and tournaments to earn $PINCRED tokens, build their record, and climb the rankings.</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="step-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Shape Their Journey</h3>
+                    <p class="step-description">Influence your wrestler's career path, form alliances, develop rivalries, and make strategic decisions to increase their value.</p>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="step-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Build Your Legacy</h3>
+                    <p class="step-description">Win championships, create memorable moments, and establish your wrestler as a legend in the NFW universe.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="section" style="background-color: rgba(0,0,0,0.3);">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Roadmap</h2>
+            <div class="timeline">
+                <!-- Phase 1 -->
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <div class="timeline-date">PHASE 1</div>
+                        <h3 class="timeline-title">Foundation</h3>
+                        <p class="timeline-description">Genesis roster creation, branding, initial storylines, and community building. The universe takes shape.</p>
+                    </div>
+                </div>
+                
+                <!-- Phase 2 -->
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-content">
+                        <div class="timeline-date">PHASE 2</div>
+                        <h3 class="timeline-title">Genesis Drop</h3>
+                        <p class="timeline-description">First 100 wrestlers minted as NFTs. Championships established. Initial matches and storylines begin.</p>
+                    </div>
+                </div>
+                
+                <!-- Phase 3 -->
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <div class="timeline-date">PHASE 3</div>
+                        <h3 class="timeline-title">$PINCRED Token</h3>
+                        <p class="timeline-description">Token launch with utility for betting, staking, and governance. Economic system activated.</p>
+                    </div>
+                </div>
+                
+                <!-- Phase 4 -->
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-content">
+                        <div class="timeline-date">PHASE 4</div>
+                        <h3 class="timeline-title">Match Engine</h3>
+                        <p class="timeline-description">AI-powered match simulation system with interactive elements and dynamic outcomes.</p>
+                    </div>
+                </div>
+                
+                <!-- Phase 5 -->
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-content">
+                        <div class="timeline-date">PHASE 5</div>
+                        <h3 class="timeline-title">Expansion</h3>
+                        <p class="timeline-description">New wrestler drops, cross-promotion events, physical merchandise, and enhanced interactive features.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Token Section -->
+    <section id="token" class="section token-section">
+        <div class="container">
+            <div class="token-grid">
+                <div class="token-info" data-aos="fade-right">
+                    <h2>$PINCRED Token</h2>
+                    <p>The native currency of the NFW universe, powering all economic activity and governance decisions within the federation.</p>
+                    
+                    <div class="token-features">
+                        <div class="token-feature">
+                            <div class="token-feature-icon">💰</div>
+                            <div class="token-feature-content">
+                                <h4>Match Betting</h4>
+                                <p>Wager on match outcomes and earn rewards for correct predictions.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="token-feature">
+                            <div class="token-feature-icon">🏆</div>
+                            <div class="token-feature-content">
+                                <h4>Staking Rewards</h4>
+                                <p>Stake tokens to earn passive income and exclusive benefits.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="token-feature">
+                            <div class="token-feature-icon">🗳️</div>
+                            <div class="token-feature-content">
+                                <h4>Governance Voting</h4>
+                                <p>Participate in federation decisions and storyline direction.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="token-feature">
+                            <div class="token-feature-icon">🛍️</div>
+                            <div class="token-feature-content">
+                                <h4>Marketplace Currency</h4>
+                                <p>Buy, sell, and trade NFW assets with $PINCRED.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="token-chart" data-aos="fade-left">
+                    <!-- PLACEHOLDER: Token allocation chart -->
+                    <!-- Size recommendation: 600x400px pie chart or similar graphic -->
+                    <img src="/api/placeholder/600/400" alt="$PINCRED Token Allocation" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="container">
+        <div class="newsletter" data-aos="fade-up">
+            <h3>Stay in the Ring</h3>
+            <p>Subscribe to get the latest updates, match results, and exclusive offers from Non-Fungible Wrestling.</p>
+            <form class="newsletter-form">
+                <input type="email" class="newsletter-input" placeholder="Your email address" required>
+                <button type="submit" class="newsletter-button">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h4>NFW</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Team</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Explore</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Wrestlers</a></li>
+                        <li><a href="#">Championships</a></li>
+                        <li><a href="#">Matches</a></li>
+                        <li><a href="#">Events</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Whitepaper</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Discord</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Medium</a></li>
+                        <li><a href="#">Telegram</a></li>
+                    </ul>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-medium"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Non-Fungible Wrestling. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    
+    <!-- AOS library for scroll animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    
+    <!-- Particles.js for background effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script>
+        // Initialize AOS animation library
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": ["#0077FF", "#9933FF", "#FFD700"]
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 2,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#0077FF",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 1,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+        
+        // Glitch effect on hover for certain elements
+        document.querySelectorAll('.glitch-animation').forEach(element => {
+            element.addEventListener('mouseover', () => {
+                element.style.animationPlayState = 'running';
+            });
+            
+            element.addEventListener('mouseout', () => {
+                element.style.animationPlayState = 'paused';
+            });
+        });
+        
+        // Connect wallet button
+        document.querySelector('.wallet-btn').addEventListener('click', function() {
+            alert('Wallet connection feature coming soon!');
+        });
+        
+        // Form submission
+        const newsletterForm = document.querySelector('.newsletter-form');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const emailInput = this.querySelector('input[type="email"]');
+                if (emailInput.value) {
+                    alert('Thanks for subscribing! You\'ll be the first to know about NFW updates.');
+                    emailInput.value = '';
+                }
+            });
+        }
+        
+        // Horizontal scroll for wrestlers container
+        const wrestlersContainer = document.querySelector('.wrestlers-container');
+        if (wrestlersContainer) {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+            
+            wrestlersContainer.addEventListener('mousedown', (e) => {
+                isDown = true;
+                wrestlersContainer.style.cursor = 'grabbing';
+                startX = e.pageX - wrestlersContainer.offsetLeft;
+                scrollLeft = wrestlersContainer.scrollLeft;
+            });
+            
+            wrestlersContainer.addEventListener('mouseleave', () => {
+                isDown = false;
+                wrestlersContainer.style.cursor = 'grab';
+            });
+            
+            wrestlersContainer.addEventListener('mouseup', () => {
+                isDown = false;
+                wrestlersContainer.style.cursor = 'grab';
+            });
+            
+            wrestlersContainer.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - wrestlersContainer.offsetLeft;
+                const walk = (x - startX) * 2;
+                wrestlersContainer.scrollLeft = scrollLeft - walk;
+            });
+        }
+    </script>
+</body>
+</html>
